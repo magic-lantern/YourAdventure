@@ -27,6 +27,12 @@ water_bottle = True
 
 shatterd = False
 
+couch_block = True
+
+nailed = True
+
+door_locked = True
+
 #def iremove_inv(i):
 #    if check_inv(i):
 #        inv.remove(i)
@@ -152,23 +158,53 @@ def forest():
         elif move == 'inv':
             show_inv()
         else:
-            print("I'm not sure what you mean. ")
-            
+            print("I'm not sure what you mean. ")        
             
 def living_room():
     timeslook = 0
     couch = 0
-    print("""You are now in the living room there is a large couch blocking 
-the door to the east""")
+    global couch_block
+    global nailed
+    global door_locked
+    if couch_block and nailed:
+        print("""You are now in the living room there is a large couch blocking 
+the nailed shut door to the east""")
+    elif couch_block and not nailed:
+        print("""You are now in the living room there is a large couch blocking
+a closed shut door to the east.""")
+    elif not couch_block and nailed:
+        print("""You are now in the living room there is a couch by the nailed 
+shut door to the east.""")
+    elif not couch_block and not nailed:
+        print("""You are now in the living room there is a huge couch by the
+closed door to the east.""")
     
     while True:
         move = input("What would you like to do? ")
         if move == 'west':
             attic_room()
-        elif move == 'east':
+        elif move == 'open door' and couch_block and nailed and door_locked:
+            print("The door is blocked and nailed shut.")
+        elif move == 'open door' and couch_block and not nailed and door_locked:
+            print("The door is blocked but not nailed it also locked.")
+        elif move == 'open door' and not nailed and not couch_block and not door_locked:
             grove()
-        elif move == 'open door':
-            print("The door is blocked")
+        elif move == 'open door' and not nailed and not couch_block and door_locked:
+            print("The door is still locked.")   
+        elif move == 'open door' and not couch_block and nailed and not door_locked:
+            print("The door is nailied shut dut not locked.")
+        elif move == 'unlock door' and not check_inv("silver key"):
+            print("You don't have the silver key.")
+        elif move == 'unlock door' and check_inv("silver key") and not couch_block:
+            print("The key hole jammed but you turn hard and the door is unlocked")
+            door_locked = False
+        elif move == 'take off nails' and check_inv("hammer"):
+            print("With a great effort you take off the nails")
+            nailed = False
+        elif move == 'take off nails' and  not check_inv("hammer"):
+            print("""You tried to take of the nails with your own finger but 
+hurts a lot. You decide to give up on taking of the nails becuase you got cut.
+You need a hammer to get them of you decide.""")
         elif move == 'look in couch':
             if timeslook == 0:
                 print("Found sword") 
@@ -184,8 +220,10 @@ the door to the east""")
             couch += 1
             if couch % 2 == 1:
                 print("""with a great effort you move the couch away from the door""")
+                couch_block = False
             elif couch % 2 == 0:
                 print("with a great effort you move the couch back.")
+                couch_block = True
         elif move == 'inv':
             show_inv()
         else:
@@ -230,7 +268,28 @@ the south""")
             print("I'n not sure what you mean.")
 
 def grove():
-    print("""You are now outside in a grove of trees""")
-    sys.exit()
+    if not check_inv("ax"):
+        print("""You are now outside in a grove of trees. There is a door to the west""")
+    elif check_inv("ax"):
+        print ("""You enter a grove then all of the sudden a wall pops up and a 
+spider crawls over the wall and the spider is as big as you and the fangs as long 
+as your arm then you see the sand timer on it's belly and it is red. IT IS A
+BLACK WIDOW!""")
+    
+    while True:
+        move = input("What would you like to do? ")
+        if move == 'west' and check_inv("ax"):
+            print("You are blocked by walls")
+        elif move == 'west' and not check_inv("ax"):
+            living_room()
+        elif move == 'kill spider' and check_inv("ax"):
+            print("""The spider dies. YOU WON ,YOU WON ,YOU WON ,YOU WON ,YOU WON
+,YOU WON, YOU WON ,YOU WON ,YOU WON ,YOU WON ,YOU WON ,YOU WON ,YOU WON ,YOU WON
+ ,YOU WON ,YOU WON ,YOU WONYOU WON ,YOU WON ,YOU WON ,YOU WON ,YOU WON ,YOU WON
+ ,YOU WON ,YOU WON ,YOU WON""")
+            sys.exit()
+        else:
+            print("I'n not sure what you mean.")
+            
     
 attic_room()
